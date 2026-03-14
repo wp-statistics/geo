@@ -310,6 +310,20 @@
                         </div>
                     </div>
 
+                    <!-- More Info (collapsible) -->
+                    <div id="more-info-section" class="hidden border-t border-slate-700/50">
+                        <button onclick="toggleMoreInfo()" id="more-info-toggle" class="w-full flex items-center justify-between px-6 py-3 text-sm text-slate-400 hover:text-white transition-colors">
+                            <span class="flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                More Info
+                            </span>
+                            <svg id="more-info-chevron" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div id="more-info-grid" class="hidden px-6 pb-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1" id="result-grid-extra"></div>
+                        </div>
+                    </div>
+
                     <!-- Results Footer -->
                     <div class="px-6 py-4 border-t border-slate-700/50 flex items-center justify-between">
                         <button onclick="copyJSON()" id="copy-json-btn" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 text-sm text-slate-300 hover:text-white hover:border-slate-600 transition-colors">
@@ -984,7 +998,7 @@ response = reader.<span class="text-yellow-400">city</span>(<span class="text-gr
         }
 
         function renderResults(data) {
-            const fields = [
+            const mainFields = [
                 { label: 'City', value: data.city },
                 { label: 'Region', value: data.region ? `${data.region}${data.region_code ? ` (${data.region_code})` : ''}` : null },
                 { label: 'Country', value: data.country ? `${countryFlag(data.country_code)} ${data.country}${data.country_code ? ` (${data.country_code})` : ''}` : null },
@@ -992,13 +1006,40 @@ response = reader.<span class="text-yellow-400">city</span>(<span class="text-gr
                 { label: 'Coordinates', value: (data.latitude != null && data.longitude != null) ? `${data.latitude}, ${data.longitude}` : null },
                 { label: 'Timezone', value: data.timezone },
                 { label: 'Postal Code', value: data.postal_code },
-                { label: 'Accuracy', value: data.accuracy_radius != null ? `~${data.accuracy_radius} km` : null },
+            ].filter(f => f.value);
+
+            const extraFields = [
+                { label: 'Accuracy Radius', value: data.accuracy_radius != null ? `~${data.accuracy_radius} km` : null },
+                { label: 'Metro Code', value: data.metro_code != null ? String(data.metro_code) : null },
+                { label: 'EU Member', value: data.is_in_european_union != null ? (data.is_in_european_union ? 'Yes' : 'No') : null },
+                { label: 'Registered Country', value: (data.registered_country && data.registered_country !== data.country) ? `${data.registered_country}${data.registered_country_code ? ` (${data.registered_country_code})` : ''}` : null },
+                { label: 'City Geoname ID', value: data.city_geoname_id != null ? String(data.city_geoname_id) : null },
+                { label: 'Country Geoname ID', value: data.country_geoname_id != null ? String(data.country_geoname_id) : null },
             ].filter(f => f.value);
 
             document.getElementById('result-ip').textContent = data.ip;
             document.getElementById('result-db-label').textContent = data.database;
 
-            const grid = document.getElementById('result-grid');
+            fillGrid('result-grid', mainFields);
+            fillGrid('result-grid-extra', extraFields);
+
+            // Show/hide more info section
+            const moreSection = document.getElementById('more-info-section');
+            if (extraFields.length > 0) {
+                moreSection.classList.remove('hidden');
+                // Reset to collapsed
+                document.getElementById('more-info-grid').classList.add('hidden');
+                document.getElementById('more-info-chevron').style.transform = '';
+            } else {
+                moreSection.classList.add('hidden');
+            }
+
+            document.getElementById('lookup-results').classList.remove('hidden');
+            document.getElementById('lookup-error').classList.add('hidden');
+        }
+
+        function fillGrid(gridId, fields) {
+            const grid = document.getElementById(gridId);
             grid.innerHTML = '';
             for (const f of fields) {
                 const row = document.createElement('div');
@@ -1012,9 +1053,13 @@ response = reader.<span class="text-yellow-400">city</span>(<span class="text-gr
                 row.append(labelEl, valueEl);
                 grid.appendChild(row);
             }
+        }
 
-            document.getElementById('lookup-results').classList.remove('hidden');
-            document.getElementById('lookup-error').classList.add('hidden');
+        function toggleMoreInfo() {
+            const grid = document.getElementById('more-info-grid');
+            const chevron = document.getElementById('more-info-chevron');
+            grid.classList.toggle('hidden');
+            chevron.style.transform = grid.classList.contains('hidden') ? '' : 'rotate(180deg)';
         }
 
         function countryFlag(code) {

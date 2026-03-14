@@ -51,16 +51,22 @@ function buildResult(ip, record, dbName) {
     ip,
     city: record?.city?.names?.en || null,
     region: record?.subdivisions?.[0]?.names?.en || null,
-    region_code: record?.subdivisions?.[0]?.isoCode || null,
+    region_code: record?.subdivisions?.[0]?.iso_code || null,
     country: record?.country?.names?.en || null,
-    country_code: record?.country?.isoCode || null,
+    country_code: record?.country?.iso_code || null,
     continent: record?.continent?.names?.en || null,
     continent_code: record?.continent?.code || null,
     latitude: record?.location?.latitude || null,
     longitude: record?.location?.longitude || null,
-    timezone: record?.location?.timeZone || null,
+    timezone: record?.location?.time_zone || null,
     postal_code: record?.postal?.code || null,
-    accuracy_radius: record?.location?.accuracyRadius || null,
+    accuracy_radius: record?.location?.accuracy_radius || null,
+    metro_code: record?.location?.metro_code || null,
+    is_in_european_union: record?.country?.is_in_european_union ?? null,
+    registered_country: record?.registered_country?.names?.en || null,
+    registered_country_code: record?.registered_country?.iso_code || null,
+    city_geoname_id: record?.city?.geoname_id || null,
+    country_geoname_id: record?.country?.geoname_id || null,
     database: dbName,
   };
 }
@@ -85,6 +91,11 @@ function formatText(data) {
   if (data.timezone) lines.push(`Timezone:    ${data.timezone}`);
   if (data.postal_code) lines.push(`Postal:      ${data.postal_code}`);
   if (data.accuracy_radius != null) lines.push(`Accuracy:    ~${data.accuracy_radius} km`);
+  if (data.metro_code != null) lines.push(`Metro Code:  ${data.metro_code}`);
+  if (data.is_in_european_union != null) lines.push(`EU Member:   ${data.is_in_european_union ? 'Yes' : 'No'}`);
+  if (data.registered_country && data.registered_country !== data.country) {
+    lines.push(`Reg. Country:${data.registered_country}${data.registered_country_code ? ` (${data.registered_country_code})` : ''}`);
+  }
   lines.push(`Database:    ${data.database}`);
   return lines.join('\n') + '\n';
 }
@@ -101,6 +112,11 @@ function formatTable(data) {
   if (data.timezone) rows.push(['Timezone', data.timezone]);
   if (data.postal_code) rows.push(['Postal Code', data.postal_code]);
   if (data.accuracy_radius != null) rows.push(['Accuracy', `~${data.accuracy_radius} km`]);
+  if (data.metro_code != null) rows.push(['Metro Code', String(data.metro_code)]);
+  if (data.is_in_european_union != null) rows.push(['EU Member', data.is_in_european_union ? 'Yes' : 'No']);
+  if (data.registered_country && data.registered_country !== data.country) {
+    rows.push(['Reg. Country', `${data.registered_country}${data.registered_country_code ? ` (${data.registered_country_code})` : ''}`]);
+  }
   rows.push(['Database', data.database]);
 
   const col1 = Math.max(...rows.map(r => r[0].length));
