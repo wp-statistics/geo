@@ -71,7 +71,13 @@ function buildResult(ip, record, dbName) {
   };
 }
 
+function countryFlag(code) {
+  if (!code) return '';
+  return String.fromCodePoint(...[...code.toUpperCase()].map(c => c.charCodeAt(0) + 127397));
+}
+
 function formatText(data) {
+  const flag = countryFlag(data.country_code);
   const lines = [
     `IP:          ${data.ip}`,
   ];
@@ -80,7 +86,7 @@ function formatText(data) {
     lines.push(`Region:      ${data.region}${data.region_code ? ` (${data.region_code})` : ''}`);
   }
   if (data.country) {
-    lines.push(`Country:     ${data.country}${data.country_code ? ` (${data.country_code})` : ''}`);
+    lines.push(`Country:     ${flag ? flag + ' ' : ''}${data.country}${data.country_code ? ` (${data.country_code})` : ''}`);
   }
   if (data.continent) {
     lines.push(`Continent:   ${data.continent}${data.continent_code ? ` (${data.continent_code})` : ''}`);
@@ -106,7 +112,7 @@ function formatTable(data) {
   ];
   if (data.city) rows.push(['City', data.city]);
   if (data.region) rows.push(['Region', `${data.region}${data.region_code ? ` (${data.region_code})` : ''}`]);
-  if (data.country) rows.push(['Country', `${data.country}${data.country_code ? ` (${data.country_code})` : ''}`]);
+  if (data.country) rows.push(['Country', `${countryFlag(data.country_code)}${countryFlag(data.country_code) ? ' ' : ''}${data.country}${data.country_code ? ` (${data.country_code})` : ''}`]);
   if (data.continent) rows.push(['Continent', `${data.continent}${data.continent_code ? ` (${data.continent_code})` : ''}`]);
   if (data.latitude != null && data.longitude != null) rows.push(['Coordinates', `${data.latitude}, ${data.longitude}`]);
   if (data.timezone) rows.push(['Timezone', data.timezone]);
