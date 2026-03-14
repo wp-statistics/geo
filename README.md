@@ -18,6 +18,7 @@
 - **Multiple Providers** - Choose between MaxMind GeoLite2 or DB-IP
 - **City-Level Accuracy** - Get country, city, coordinates, and timezone
 - **Version History** - All versions preserved in npm registry
+- **IP Lookup API** - Look up any IP via web UI or CLI (`curl geo.wp-statistics.com`)
 
 ---
 
@@ -48,6 +49,85 @@ A lightweight alternative with smaller file size.
 | **License** | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
 | **GitHub** | [wp-statistics/DbIP-City-lite](https://github.com/wp-statistics/DbIP-City-lite) |
 | **npm** | [dbip-city-lite](https://www.npmjs.com/package/dbip-city-lite) |
+
+---
+
+## IP Lookup API
+
+Look up any IP address instantly — from your terminal or the web.
+
+### CLI Usage
+
+```bash
+# Look up your own IP
+curl geo.wp-statistics.com
+
+# Look up a specific IP
+curl geo.wp-statistics.com/1.2.3.4
+
+# Get JSON response
+curl "geo.wp-statistics.com?format=json"
+
+# Get a formatted table
+curl "geo.wp-statistics.com?format=table"
+
+# Use a specific database
+curl "geo.wp-statistics.com/api/lookup?ip=1.2.3.4&db=dbip"
+```
+
+### Response Formats
+
+**Plain text** (default for CLI):
+```
+IP:          128.101.101.101
+City:        Minneapolis
+Region:      Minnesota (MN)
+Country:     United States (US)
+Coordinates: 44.9759, -93.2166
+Timezone:    America/Chicago
+Postal:      55414
+Database:    GeoLite2-City
+```
+
+**JSON** (`?format=json`):
+```json
+{
+  "ip": "128.101.101.101",
+  "city": "Minneapolis",
+  "region": "Minnesota",
+  "region_code": "MN",
+  "country": "United States",
+  "country_code": "US",
+  "continent": "North America",
+  "continent_code": "NA",
+  "latitude": 44.9759,
+  "longitude": -93.2166,
+  "timezone": "America/Chicago",
+  "postal_code": "55414",
+  "accuracy_radius": 20,
+  "database": "GeoLite2-City"
+}
+```
+
+**Table** (`?format=table`):
+```
++-------------+----------------------+
+| Field       | Value                |
++-------------+----------------------+
+| IP          | 128.101.101.101      |
+| City        | Minneapolis          |
+| Region      | Minnesota (MN)       |
+| Country     | United States (US)   |
+| Coordinates | 44.9759, -93.2166    |
+| Timezone    | America/Chicago      |
+| Postal Code | 55414                |
+| Database    | GeoLite2-City        |
++-------------+----------------------+
+```
+
+### Web UI
+
+Visit [geo.wp-statistics.com](https://geo.wp-statistics.com) to use the interactive IP lookup with database toggle (MaxMind / DB-IP).
 
 ---
 

@@ -1,4 +1,6 @@
 const maxmind = require('maxmind');
+const fs = require('fs');
+const zlib = require('zlib');
 const path = require('path');
 
 let readers = {};
@@ -7,9 +9,11 @@ async function getReader(db) {
   const key = db === 'dbip' ? 'dbip' : 'maxmind';
   if (!readers[key]) {
     const file = key === 'dbip'
-      ? path.join(process.cwd(), 'data', 'dbip-city-lite.mmdb')
-      : path.join(process.cwd(), 'data', 'GeoLite2-City.mmdb');
-    readers[key] = await maxmind.open(file);
+      ? path.join(process.cwd(), 'data', 'dbip-city-lite.mmdb.gz')
+      : path.join(process.cwd(), 'data', 'GeoLite2-City.mmdb.gz');
+    const compressed = fs.readFileSync(file);
+    const buffer = zlib.gunzipSync(compressed);
+    readers[key] = new maxmind.Reader(buffer);
   }
   return { reader: readers[key], name: key === 'dbip' ? 'DB-IP City Lite' : 'GeoLite2-City' };
 }
