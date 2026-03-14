@@ -122,6 +122,7 @@
                     <span class="text-lg font-bold">geo.wp-statistics.com</span>
                 </div>
                 <div class="hidden md:flex items-center space-x-8">
+                    <a href="#lookup" class="text-slate-400 hover:text-white transition-colors">IP Lookup</a>
                     <a href="#databases" class="text-slate-400 hover:text-white transition-colors">Databases</a>
                     <a href="#quickstart" class="text-slate-400 hover:text-white transition-colors">Quick Start</a>
                     <a href="#docs" class="text-slate-400 hover:text-white transition-colors">Docs</a>
@@ -261,8 +262,105 @@
         </div>
     </section>
 
+    <!-- IP Lookup Section -->
+    <section id="lookup" class="py-24 bg-slate-900/50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-4">IP Address Lookup</h2>
+                <p class="text-xl text-slate-400 max-w-2xl mx-auto">
+                    Try our databases live — enter any IP address or look up your own.
+                </p>
+            </div>
+
+            <!-- Search -->
+            <div class="flex gap-3 mb-8 max-w-2xl mx-auto">
+                <div class="flex-1 relative">
+                    <input type="text" id="lookup-input" placeholder="Enter an IP address..." class="w-full px-5 py-4 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors text-lg" />
+                    <div id="lookup-spinner" class="hidden absolute right-4 top-1/2 -translate-y-1/2">
+                        <svg class="w-5 h-5 animate-spin text-primary-400" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                    </div>
+                </div>
+                <button onclick="performLookup()" class="px-8 py-4 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold text-lg hover:from-primary-400 hover:to-primary-500 transition-all shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40 whitespace-nowrap">
+                    Lookup
+                </button>
+            </div>
+
+            <!-- Results Card -->
+            <div id="lookup-results" class="hidden">
+                <div class="rounded-2xl bg-gradient-to-b from-slate-800 to-slate-900 border border-slate-700/50 overflow-hidden">
+                    <!-- Results Header -->
+                    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-700/50">
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                            <span class="font-semibold text-white" id="result-ip">—</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <!-- Database Toggle -->
+                            <div class="flex rounded-lg bg-slate-900 border border-slate-700 p-0.5">
+                                <button onclick="switchDB('maxmind')" id="db-tab-maxmind" class="db-tab px-3 py-1.5 rounded-md text-sm font-medium transition-colors bg-primary-500/20 text-primary-400">MaxMind</button>
+                                <button onclick="switchDB('dbip')" id="db-tab-dbip" class="db-tab px-3 py-1.5 rounded-md text-sm font-medium transition-colors text-slate-400 hover:text-white">DB-IP</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Grid -->
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4" id="result-grid">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Results Footer -->
+                    <div class="px-6 py-4 border-t border-slate-700/50 flex items-center justify-between">
+                        <button onclick="copyJSON()" id="copy-json-btn" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 text-sm text-slate-300 hover:text-white hover:border-slate-600 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            Copy JSON
+                        </button>
+                        <span class="text-xs text-slate-500" id="result-db-label">GeoLite2-City</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div id="lookup-error" class="hidden">
+                <div class="rounded-2xl bg-red-500/5 border border-red-500/20 p-6 text-center">
+                    <svg class="w-10 h-10 text-red-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <p class="text-red-400 font-medium" id="error-message">Something went wrong</p>
+                </div>
+            </div>
+
+            <!-- Loading Skeleton -->
+            <div id="lookup-skeleton" class="hidden">
+                <div class="rounded-2xl bg-gradient-to-b from-slate-800 to-slate-900 border border-slate-700/50 p-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+                        <div class="h-6 bg-slate-700/50 rounded animate-pulse"></div>
+                        <div class="h-6 bg-slate-700/50 rounded animate-pulse"></div>
+                        <div class="h-6 bg-slate-700/50 rounded animate-pulse"></div>
+                        <div class="h-6 bg-slate-700/50 rounded animate-pulse"></div>
+                        <div class="h-6 bg-slate-700/50 rounded animate-pulse"></div>
+                        <div class="h-6 bg-slate-700/50 rounded animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CLI Usage Hint -->
+            <div class="mt-8 rounded-xl bg-slate-800/50 border border-slate-700/50 p-5">
+                <div class="flex items-center gap-2 mb-3">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span class="text-sm font-medium text-slate-400">Also available via CLI</span>
+                </div>
+                <div class="space-y-1.5 font-mono text-sm">
+                    <p class="text-slate-300"><span class="text-primary-400">$</span> curl geo.wp-statistics.com</p>
+                    <p class="text-slate-300"><span class="text-primary-400">$</span> curl geo.wp-statistics.com/1.2.3.4</p>
+                    <p class="text-slate-300"><span class="text-primary-400">$</span> curl "geo.wp-statistics.com?format=json"</p>
+                    <p class="text-slate-300"><span class="text-primary-400">$</span> curl "geo.wp-statistics.com?format=table"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Databases Section -->
-    <section id="databases" class="py-24 bg-slate-900/50">
+    <section id="databases" class="py-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-3xl sm:text-4xl font-bold mb-4">Choose Your Database</h2>
@@ -434,6 +532,11 @@
                 <div class="flex flex-col md:flex-row rounded-2xl overflow-hidden border border-slate-700/50 bg-slate-900">
                     <!-- Language Tabs - Left Side -->
                     <div class="md:w-48 md:min-w-[12rem] flex md:flex-col border-b md:border-b-0 md:border-r border-slate-700/50 bg-slate-800/50">
+                        <button onclick="showCode('cli')" id="tab-cli" class="code-tab flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-700/50 transition-colors border-b md:border-b border-slate-700/30 relative">
+                            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <span class="font-medium">CLI</span>
+                            <span class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">NEW</span>
+                        </button>
                         <button onclick="showCode('php')" id="tab-php" class="code-tab flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-700/50 transition-colors border-b md:border-b border-slate-700/30 active">
                             <svg class="w-5 h-5 text-indigo-400" viewBox="0 0 24 24" fill="currentColor"><path d="M7.01 10.207h-.944l-.515 2.648h.838c.556 0 .97-.105 1.242-.314.272-.21.455-.559.55-1.049.092-.47.05-.82-.124-1.049-.174-.229-.509-.343-1.047-.343v.107zm4.02 0h-.944l-.515 2.648h.838c.556 0 .97-.105 1.242-.314.272-.21.455-.559.55-1.049.092-.47.05-.82-.124-1.049-.174-.229-.509-.343-1.047-.343v.107zM12 5.688C5.373 5.688 0 8.514 0 12s5.373 6.313 12 6.313S24 15.486 24 12c0-3.486-5.373-6.312-12-6.312zm-3.26 7.451c-.261.25-.575.438-.917.551-.336.108-.765.164-1.285.164H5.357l-.327 1.681H3.652l1.23-6.326h2.65c.797 0 1.378.209 1.744.628.366.418.476 1.002.33 1.752a2.836 2.836 0 01-.349.899c-.165.283-.384.532-.659.747l.142-.096zm4.02 0c-.261.25-.575.438-.917.551-.336.108-.765.164-1.285.164H9.377l-.327 1.681H7.672l1.23-6.326h2.65c.797 0 1.378.209 1.744.628.366.418.476 1.002.33 1.752a2.836 2.836 0 01-.349.899c-.165.283-.384.532-.659.747l.142-.096zm7.187-1.027c-.07.266-.153.505-.25.719a3.43 3.43 0 01-.382.635c-.146.195-.3.37-.465.528a2.9 2.9 0 01-.512.395c-.186.113-.38.21-.58.291a3.376 3.376 0 01-.612.178c-.199.041-.392.067-.576.078-.184.01-.352.016-.502.016h-1.232l-.327 1.681h-1.378l1.23-6.326h2.65c.797 0 1.378.209 1.744.628.366.418.476 1.002.33 1.752l-.138.425zm-2.165-.724h-.944l-.515 2.648h.838c.556 0 .97-.105 1.242-.314.272-.21.455-.559.55-1.049.092-.47.05-.82-.124-1.049-.174-.229-.509-.343-1.047-.343v.107z"/></svg>
                             <span class="font-medium">PHP</span>
@@ -468,6 +571,24 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                                 </svg>
                             </button>
+                        </div>
+
+                        <!-- CLI Code -->
+                        <div id="code-cli" class="code-content p-6 hidden">
+                            <pre class="text-sm leading-relaxed"><code class="text-slate-300"><span class="text-slate-500"># Look up your own IP</span>
+<span class="text-primary-400">$</span> curl geo.wp-statistics.com
+
+<span class="text-slate-500"># Look up a specific IP</span>
+<span class="text-primary-400">$</span> curl geo.wp-statistics.com/1.2.3.4
+
+<span class="text-slate-500"># Get JSON response</span>
+<span class="text-primary-400">$</span> curl <span class="text-green-400">"geo.wp-statistics.com?format=json"</span>
+
+<span class="text-slate-500"># Get a formatted table</span>
+<span class="text-primary-400">$</span> curl <span class="text-green-400">"geo.wp-statistics.com?format=table"</span>
+
+<span class="text-slate-500"># Use a specific database</span>
+<span class="text-primary-400">$</span> curl <span class="text-green-400">"geo.wp-statistics.com/api/lookup?ip=1.2.3.4&db=dbip"</span></code></pre>
                         </div>
 
                         <!-- PHP Code -->
@@ -568,6 +689,7 @@ response = reader.<span class="text-yellow-400">city</span>(<span class="text-gr
 
             <script>
                 const codeFiles = {
+                    cli: 'terminal',
                     php: 'example.php',
                     node: 'example.js',
                     python: 'example.py',
@@ -818,6 +940,116 @@ response = reader.<span class="text-yellow-400">city</span>(<span class="text-gr
         }
 
         fetchLastUpdates();
+    </script>
+
+    <!-- IP Lookup Logic -->
+    <script>
+        let currentDB = 'maxmind';
+        let lastLookupData = null;
+
+        async function performLookup(db) {
+            const input = document.getElementById('lookup-input');
+            const ip = input.value.trim();
+            const dbParam = db || currentDB;
+            const url = ip
+                ? `/api/lookup?ip=${encodeURIComponent(ip)}&db=${dbParam}`
+                : `/api/lookup?db=${dbParam}`;
+
+            document.getElementById('lookup-results').classList.add('hidden');
+            document.getElementById('lookup-error').classList.add('hidden');
+            document.getElementById('lookup-skeleton').classList.remove('hidden');
+            document.getElementById('lookup-spinner').classList.remove('hidden');
+
+            try {
+                const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+                document.getElementById('lookup-skeleton').classList.add('hidden');
+                document.getElementById('lookup-spinner').classList.add('hidden');
+
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    document.getElementById('error-message').textContent = err.message || `Lookup failed (${res.status})`;
+                    document.getElementById('lookup-error').classList.remove('hidden');
+                    return;
+                }
+
+                const data = await res.json();
+                lastLookupData = data;
+                renderResults(data);
+            } catch (e) {
+                document.getElementById('lookup-skeleton').classList.add('hidden');
+                document.getElementById('lookup-spinner').classList.add('hidden');
+                document.getElementById('error-message').textContent = 'Network error — could not reach the API.';
+                document.getElementById('lookup-error').classList.remove('hidden');
+            }
+        }
+
+        function renderResults(data) {
+            const fields = [
+                { label: 'City', value: data.city },
+                { label: 'Region', value: data.region ? `${data.region}${data.region_code ? ` (${data.region_code})` : ''}` : null },
+                { label: 'Country', value: data.country ? `${countryFlag(data.country_code)} ${data.country}${data.country_code ? ` (${data.country_code})` : ''}` : null },
+                { label: 'Continent', value: data.continent ? `${data.continent}${data.continent_code ? ` (${data.continent_code})` : ''}` : null },
+                { label: 'Coordinates', value: (data.latitude != null && data.longitude != null) ? `${data.latitude}, ${data.longitude}` : null },
+                { label: 'Timezone', value: data.timezone },
+                { label: 'Postal Code', value: data.postal_code },
+                { label: 'Accuracy', value: data.accuracy_radius != null ? `~${data.accuracy_radius} km` : null },
+            ].filter(f => f.value);
+
+            document.getElementById('result-ip').textContent = data.ip;
+            document.getElementById('result-db-label').textContent = data.database;
+
+            const grid = document.getElementById('result-grid');
+            grid.innerHTML = '';
+            for (const f of fields) {
+                const row = document.createElement('div');
+                row.className = 'flex items-center justify-between py-2 border-b border-slate-700/30';
+                const labelEl = document.createElement('span');
+                labelEl.className = 'text-sm text-slate-400';
+                labelEl.textContent = f.label;
+                const valueEl = document.createElement('span');
+                valueEl.className = 'text-sm font-medium text-white';
+                valueEl.textContent = f.value;
+                row.append(labelEl, valueEl);
+                grid.appendChild(row);
+            }
+
+            document.getElementById('lookup-results').classList.remove('hidden');
+            document.getElementById('lookup-error').classList.add('hidden');
+        }
+
+        function countryFlag(code) {
+            if (!code) return '';
+            const offset = 127397;
+            return String.fromCodePoint(...[...code.toUpperCase()].map(c => c.charCodeAt(0) + offset));
+        }
+
+        function switchDB(db) {
+            currentDB = db;
+            document.querySelectorAll('.db-tab').forEach(el => {
+                el.classList.remove('bg-primary-500/20', 'text-primary-400');
+                el.classList.add('text-slate-400');
+            });
+            const active = document.getElementById('db-tab-' + db);
+            active.classList.add('bg-primary-500/20', 'text-primary-400');
+            active.classList.remove('text-slate-400');
+            if (lastLookupData) {
+                performLookup(db);
+            }
+        }
+
+        function copyJSON() {
+            if (!lastLookupData) return;
+            navigator.clipboard.writeText(JSON.stringify(lastLookupData, null, 2));
+            const btn = document.getElementById('copy-json-btn');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Copied!';
+            setTimeout(() => { btn.innerHTML = orig; }, 2000);
+        }
+
+        // Allow Enter key to trigger lookup
+        document.getElementById('lookup-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') performLookup();
+        });
     </script>
 </body>
 </html>

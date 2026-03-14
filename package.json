@@ -1,0 +1,10 @@
+{
+  "name": "geo-wp-statistics",
+  "private": true,
+  "scripts": {
+    "build": "bash scripts/download-db.sh"
+  },
+  "dependencies": {
+    "maxmind": "^4.3.0"
+  }
+}
