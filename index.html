@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Free GeoIP Databases | geo.wp-statistics.com</title>
-    <meta name="description" content="Free IP geolocation lookup and databases for developers. Look up any IP address instantly via web or CLI (curl geo.wp-statistics.com). MaxMind GeoLite2 and DB-IP databases with city-level accuracy, updated automatically.">
+    <meta name="description" content="Free IP geolocation lookup and databases for developers. Look up any IP address instantly via web or CLI (curl https://geo.wp-statistics.com). MaxMind GeoLite2 and DB-IP databases with city-level accuracy, updated automatically.">
     <meta name="keywords" content="GeoIP, IP geolocation, IP lookup, MaxMind, GeoLite2, DB-IP, free database, API, curl, CLI, geolocation, IP address, country, city">
     <meta property="og:title" content="Free GeoIP Databases & IP Lookup | geo.wp-statistics.com">
     <meta property="og:description" content="Look up any IP address instantly. Free, auto-updated IP geolocation databases and API for developers. No auth required.">
@@ -12,7 +12,7 @@
     <meta property="og:url" content="https://geo.wp-statistics.com">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Free GeoIP Databases & IP Lookup">
-    <meta name="twitter:description" content="Look up any IP address instantly. Free, auto-updated geolocation databases and API. curl geo.wp-statistics.com">
+    <meta name="twitter:description" content="Look up any IP address instantly. Free, auto-updated geolocation databases and API. curl https://geo.wp-statistics.com">
     <link rel="canonical" href="https://geo.wp-statistics.com">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -373,10 +373,10 @@
                     <span class="text-sm font-medium text-slate-400">Also available via CLI</span>
                 </div>
                 <div class="space-y-1.5 font-mono text-sm">
-                    <p class="text-slate-300"><span class="text-primary-400">$</span> curl geo.wp-statistics.com</p>
-                    <p class="text-slate-300"><span class="text-primary-400">$</span> curl geo.wp-statistics.com/1.2.3.4</p>
-                    <p class="text-slate-300"><span class="text-primary-400">$</span> curl "geo.wp-statistics.com?format=json"</p>
-                    <p class="text-slate-300"><span class="text-primary-400">$</span> curl "geo.wp-statistics.com?format=table"</p>
+                    <p class="text-slate-300"><span class="text-primary-400">$</span> curl https://geo.wp-statistics.com</p>
+                    <p class="text-slate-300"><span class="text-primary-400">$</span> curl https://geo.wp-statistics.com/1.2.3.4</p>
+                    <p class="text-slate-300"><span class="text-primary-400">$</span> curl https://geo.wp-statistics.com?format=json</p>
+                    <p class="text-slate-300"><span class="text-primary-400">$</span> curl https://geo.wp-statistics.com?format=table</p>
                 </div>
             </div>
         </div>
@@ -599,19 +599,19 @@
                         <!-- CLI Code -->
                         <div id="code-cli" class="code-content p-6 hidden">
                             <pre class="text-sm leading-relaxed"><code class="text-slate-300"><span class="text-slate-500"># Look up your own IP</span>
-<span class="text-primary-400">$</span> curl geo.wp-statistics.com
+<span class="text-primary-400">$</span> curl <span class="text-green-400">https://geo.wp-statistics.com</span>
 
 <span class="text-slate-500"># Look up a specific IP</span>
-<span class="text-primary-400">$</span> curl geo.wp-statistics.com/1.2.3.4
+<span class="text-primary-400">$</span> curl <span class="text-green-400">https://geo.wp-statistics.com/1.2.3.4</span>
 
 <span class="text-slate-500"># Get JSON response</span>
-<span class="text-primary-400">$</span> curl <span class="text-green-400">"geo.wp-statistics.com?format=json"</span>
+<span class="text-primary-400">$</span> curl <span class="text-green-400">https://geo.wp-statistics.com?format=json</span>
 
 <span class="text-slate-500"># Get a formatted table</span>
-<span class="text-primary-400">$</span> curl <span class="text-green-400">"geo.wp-statistics.com?format=table"</span>
+<span class="text-primary-400">$</span> curl <span class="text-green-400">https://geo.wp-statistics.com?format=table</span>
 
 <span class="text-slate-500"># Use a specific database</span>
-<span class="text-primary-400">$</span> curl <span class="text-green-400">"geo.wp-statistics.com/api/lookup?ip=1.2.3.4&db=dbip"</span></code></pre>
+<span class="text-primary-400">$</span> curl <span class="text-green-400">https://geo.wp-statistics.com/api/lookup?ip=1.2.3.4</span></code></pre>
                         </div>
 
                         <!-- PHP Code -->

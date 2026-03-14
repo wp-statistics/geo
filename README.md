@@ -18,7 +18,7 @@
 - **Multiple Providers** - Choose between MaxMind GeoLite2 or DB-IP
 - **City-Level Accuracy** - Get country, city, coordinates, and timezone
 - **Version History** - All versions preserved in npm registry
-- **IP Lookup API** - Look up any IP via web UI or CLI (`curl geo.wp-statistics.com`)
+- **IP Lookup API** - Look up any IP via web UI or CLI (`curl https://geo.wp-statistics.com`)
 
 ---
 
@@ -60,19 +60,19 @@ Look up any IP address instantly — from your terminal or the web.
 
 ```bash
 # Look up your own IP
-curl geo.wp-statistics.com
+curl https://geo.wp-statistics.com
 
 # Look up a specific IP
-curl geo.wp-statistics.com/1.2.3.4
+curl https://geo.wp-statistics.com/1.2.3.4
 
 # Get JSON response
-curl "geo.wp-statistics.com?format=json"
+curl https://geo.wp-statistics.com?format=json"
 
 # Get a formatted table
-curl "geo.wp-statistics.com?format=table"
+curl https://geo.wp-statistics.com?format=table"
 
 # Use a specific database
-curl "geo.wp-statistics.com/api/lookup?ip=1.2.3.4&db=dbip"
+curl https://geo.wp-statistics.com/api/lookup?ip=1.2.3.4&db=dbip"
 ```
 
 ### Response Formats
