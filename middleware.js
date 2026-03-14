@@ -9,9 +9,8 @@ export default function middleware(req) {
   const isCLI = cliAgents.some(agent => ua.includes(agent));
 
   if (isCLI) {
-    // Preserve query params (format, db, etc.)
     url.pathname = '/api/lookup';
-    return Response.redirect(url.toString(), 307);
+    return fetch(url.toString(), { headers: req.headers });
   }
 }
 
