@@ -19,6 +19,7 @@ async function getReader(db) {
 }
 
 function getClientIP(req) {
+  if (req.headers['cf-connecting-ip']) return req.headers['cf-connecting-ip'];
   const forwarded = req.headers['x-forwarded-for'];
   if (forwarded) {
     return forwarded.split(',')[0].trim();
