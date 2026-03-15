@@ -11,7 +11,10 @@ export default function middleware(req) {
     !accept.includes('text/html');
 
   if (isCLI) {
+    const clientIP = req.headers.get('cf-connecting-ip') ||
+      (req.headers.get('x-forwarded-for') || '').split(',')[0].trim();
     url.pathname = '/api/lookup';
+    if (clientIP) url.searchParams.set('ip', clientIP);
     return fetch(url.toString(), { headers: req.headers });
   }
 }
