@@ -8,7 +8,7 @@ export default function middleware(req) {
   const cliAgents = ['curl/', 'wget/', 'httpie/', 'go-http-client', 'python-requests', 'powershell', 'libwww-perl', 'python-urllib'];
   const accept = req.headers.get('accept') || '';
   const isCLI = cliAgents.some(agent => ua.includes(agent)) ||
-    (accept && !accept.includes('text/html'));
+    !accept.includes('text/html');
 
   if (isCLI) {
     url.pathname = '/api/lookup';
