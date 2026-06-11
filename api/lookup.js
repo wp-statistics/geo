@@ -1,4 +1,5 @@
 const maxmind = require('maxmind');
+const net = require('net');
 const fs = require('fs');
 const zlib = require('zlib');
 const path = require('path');
@@ -16,6 +17,70 @@ async function getReader(db) {
     readers[key] = new maxmind.Reader(buffer);
   }
   return { reader: readers[key], name: key === 'dbip' ? 'DB-IP City Lite' : 'GeoLite2-City' };
+}
+
+// Public lookups keyed on an explicit ?ip= are identical for every caller and
+// can be cached at the shared edge for a day. Repeats then cost zero function
+// invocations. Browsers are told not to cache (max-age=0) so a user re-checking
+// their own IP always gets a fresh answer.
+const CACHE_PUBLIC = 'public, max-age=0, s-maxage=86400, stale-while-revalidate=604800';
+const CACHE_PRIVATE = 'private, no-store';
+
+function applyCache(res, cacheable) {
+  if (cacheable) {
+    res.setHeader('Cache-Control', CACHE_PUBLIC);
+    res.setHeader('Vary', 'Accept');
+  } else {
+    res.setHeader('Cache-Control', CACHE_PRIVATE);
+  }
+}
+
+function isReservedIPv4(addr) {
+  const [a, b, c] = addr.split('.').map(Number);
+  if (a === 0) return true;                              // 0.0.0.0/8 "this network"
+  if (a === 10) return true;                             // 10.0.0.0/8 private
+  if (a === 127) return true;                            // 127.0.0.0/8 loopback
+  if (a === 100 && b >= 64 && b <= 127) return true;     // 100.64.0.0/10 CGNAT
+  if (a === 169 && b === 254) return true;               // 169.254.0.0/16 link-local
+  if (a === 172 && b >= 16 && b <= 31) return true;      // 172.16.0.0/12 private
+  if (a === 192 && b === 168) return true;               // 192.168.0.0/16 private
+  if (a === 192 && b === 0 && c === 2) return true;      // 192.0.2.0/24 documentation
+  if (a === 198 && (b === 18 || b === 19)) return true;  // 198.18.0.0/15 benchmarking
+  if (a >= 224) return true;                             // 224/4 multicast + 240/4 reserved
+  return false;
+}
+
+function isReservedIPv6(addr) {
+  if (addr === '::' || addr === '::1') return true;      // unspecified, loopback
+  if (/^fe[89ab]/.test(addr)) return true;               // fe80::/10 link-local
+  if (addr.startsWith('fc') || addr.startsWith('fd')) return true; // fc00::/7 unique-local
+  if (addr.startsWith('ff')) return true;                // ff00::/8 multicast
+  return false;
+}
+
+// 'public' = worth a DB lookup; 'reserved' = private/loopback/etc (no geo data);
+// 'invalid' = not an IP at all. net.isIP is authoritative on validity (rejects
+// leading zeros, out-of-range octets, malformed v6), so the helpers above only
+// judge reserved-ness. Reserved/invalid are answered without touching the 68 MB
+// database.
+function classifyIP(ip) {
+  if (typeof ip !== 'string') return 'invalid';
+  const addr = ip.split('%')[0].toLowerCase(); // drop IPv6 zone id (e.g. %eth0)
+  const version = net.isIP(addr);
+  if (version === 4) return isReservedIPv4(addr) ? 'reserved' : 'public';
+  if (version === 6) return isReservedIPv6(addr) ? 'reserved' : 'public';
+  return 'invalid';
+}
+
+function sendError(res, status, ip, message, format, cacheable) {
+  applyCache(res, cacheable);
+  if (format === 'json') {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.status(status).json({ error: status === 400 ? 'Invalid request' : 'Not found', ip, message });
+  } else {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.status(status).end(message + '\n');
+  }
 }
 
 function getClientIP(req) {
@@ -36,8 +101,7 @@ function isCLI(req) {
   return false;
 }
 
-function detectFormat(req) {
-  const url = new URL(req.url, `http://${req.headers.host}`);
+function detectFormat(req, url) {
   const explicit = url.searchParams.get('format');
   if (explicit && ['json', 'text', 'table'].includes(explicit)) return explicit;
   const accept = req.headers['accept'] || '';
@@ -151,22 +215,37 @@ module.exports = async function handler(req, res) {
     const queryIP = url.searchParams.get('ip');
     const db = url.searchParams.get('db') || 'maxmind';
     const ip = queryIP || getClientIP(req);
+    const format = detectFormat(req, url);
+
+    // Only an explicit ?ip= produces a caller-independent answer that is safe to
+    // share from the edge cache. An IP derived from the caller's own connection
+    // must stay private, or the CDN would serve one visitor's location to all.
+    const cacheable = Boolean(queryIP);
+
+    // Validate before touching the 68 MB database. Invalid input and private /
+    // reserved ranges (10.x, 127.x, 192.168.x, 169.254.x, ...) never have geo
+    // data, so answer them with a cacheable error instead of paying for a
+    // decompression + lookup on every junk request.
+    const ipClass = classifyIP(ip);
+    if (ipClass === 'invalid') {
+      sendError(res, 400, ip, `'${ip}' is not a valid IP address`, format, cacheable);
+      return;
+    }
+    if (ipClass === 'reserved') {
+      sendError(res, 404, ip, `No geolocation data for private or reserved IP ${ip}`, format, cacheable);
+      return;
+    }
 
     const { reader, name: dbName } = await getReader(db);
     const record = reader.get(ip);
 
     if (!record) {
-      const format = detectFormat(req);
-      if (format === 'json') {
-        res.status(404).json({ error: 'Not found', ip, message: `No geolocation data found for ${ip}` });
-      } else {
-        res.status(404).setHeader('Content-Type', 'text/plain; charset=utf-8').end(`No geolocation data found for ${ip}\n`);
-      }
+      sendError(res, 404, ip, `No geolocation data found for ${ip}`, format, cacheable);
       return;
     }
 
     const data = buildResult(ip, record, dbName);
-    const format = detectFormat(req);
+    applyCache(res, cacheable);
 
     if (format === 'json') {
       res.setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -180,6 +259,7 @@ module.exports = async function handler(req, res) {
     }
   } catch (err) {
     console.error('Lookup error:', err);
+    res.setHeader('Cache-Control', CACHE_PRIVATE);
     res.status(500).json({ error: 'Internal server error', message: err.message });
   }
 };

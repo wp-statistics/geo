@@ -15,7 +15,14 @@ export default function middleware(req) {
       (req.headers.get('x-forwarded-for') || '').split(',')[0].trim();
     url.pathname = '/api/lookup';
     if (clientIP) url.searchParams.set('ip', clientIP);
-    return fetch(url.toString(), { headers: req.headers });
+
+    // Internal rewrite via Vercel's native middleware header. The previous
+    // `fetch(url.toString())` made a second outbound HTTP round-trip back into
+    // this same deployment, double-counting every CLI hit as an extra edge
+    // request + function invocation. This rewrites in place with no extra call.
+    return new Response(null, {
+      headers: { 'x-middleware-rewrite': url.toString() },
+    });
   }
 }
 
