@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free GeoIP Databases | geo.wp-statistics.com</title>
+    <meta name="description" content="Free IP geolocation lookup and databases for developers. Look up any IP address instantly via web or CLI (curl https://geo.wp-statistics.com). MaxMind GeoLite2 and DB-IP databases with city-level accuracy, updated automatically.">
+    <meta name="keywords" content="GeoIP, IP geolocation, IP lookup, MaxMind, GeoLite2, DB-IP, free database, API, curl, CLI, geolocation, IP address, country, city">
+    <meta property="og:title" content="Free GeoIP Databases & IP Lookup | geo.wp-statistics.com">
+    <meta property="og:description" content="Look up any IP address instantly. Free, auto-updated IP geolocation databases and API for developers. No auth required.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://geo.wp-statistics.com">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free GeoIP Databases & IP Lookup">
+    <meta name="twitter:description" content="Look up any IP address instantly. Free, auto-updated geolocation databases and API. curl https://geo.wp-statistics.com">
+    <link rel="canonical" href="https://geo.wp-statistics.com">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwindcss.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        code, pre { font-family: 'JetBrains Mono', monospace; }
+        .gradient-text {
+            background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-border {
+            background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
+            padding: 1px;
+        }
+        .hero-gradient {
+            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(14, 165, 233, 0.15), transparent);
+        }
+        .glow {
+            box-shadow: 0 0 60px rgba(14, 165, 233, 0.3);
+        }
+        .code-block {
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        /* Elegant Network Globe */
+        .globe-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        .globe-network {
+            width: 100%;
+            height: 100%;
+        }
+
+        .globe-sphere {
+            animation: rotate-sphere 80s linear infinite;
+            transform-origin: center;
+        }
+
+        .globe-dots {
+            animation: rotate-dots 120s linear infinite reverse;
+            transform-origin: center;
+        }
+
+        @keyframes rotate-sphere {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes rotate-dots {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 0.6; r: 3; }
+            50% { opacity: 1; r: 4; }
+        }
+
+        @keyframes glow-line {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.4; }
+        }
+
+        @keyframes float-gentle {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-10px); }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-purple-500 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-lg font-bold">geo.wp-statistics.com</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#lookup" class="text-slate-400 hover:text-white transition-colors">IP Lookup</a>
+                    <a href="#databases" class="text-slate-400 hover:text-white transition-colors">Databases</a>
+                    <a href="#quickstart" class="text-slate-400 hover:text-white transition-colors">Quick Start</a>
+                    <a href="#docs" class="text-slate-400 hover:text-white transition-colors">Docs</a>
+                    <a href="https://github.com/wp-statistics" target="_blank" class="flex items-center space-x-2 text-slate-400 hover:text-white transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center hero-gradient pt-16">
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+            <!-- Elegant Network Globe -->
+            <div class="globe-container" style="animation: float-gentle 12s ease-in-out infinite;">
+                <svg class="globe-network" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="globe-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.6"/>
+                            <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.4"/>
+                        </linearGradient>
+                        <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.15"/>
+                            <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0"/>
+                        </radialGradient>
+                    </defs>
+
+                    <!-- Soft glow background -->
+                    <circle cx="200" cy="200" r="180" fill="url(#glow)"/>
+
+                    <!-- Globe wireframe -->
+                    <g class="globe-sphere" opacity="0.5">
+                        <!-- Main circle -->
+                        <circle cx="200" cy="200" r="150" stroke="url(#globe-grad)" stroke-width="0.75" fill="none"/>
+
+                        <!-- Meridians -->
+                        <ellipse cx="200" cy="200" rx="150" ry="40" stroke="#0ea5e9" stroke-width="0.4" fill="none" opacity="0.5"/>
+                        <ellipse cx="200" cy="200" rx="150" ry="80" stroke="#0ea5e9" stroke-width="0.4" fill="none" opacity="0.4"/>
+                        <ellipse cx="200" cy="200" rx="150" ry="120" stroke="#0ea5e9" stroke-width="0.4" fill="none" opacity="0.3"/>
+
+                        <!-- Parallels -->
+                        <ellipse cx="200" cy="200" rx="40" ry="150" stroke="#8b5cf6" stroke-width="0.4" fill="none" opacity="0.4"/>
+                        <ellipse cx="200" cy="200" rx="80" ry="150" stroke="#8b5cf6" stroke-width="0.4" fill="none" opacity="0.3"/>
+                        <ellipse cx="200" cy="200" rx="120" ry="150" stroke="#8b5cf6" stroke-width="0.4" fill="none" opacity="0.25"/>
+                    </g>
+
+                    <!-- Connection arcs -->
+                    <g stroke="#0ea5e9" stroke-width="0.5" fill="none">
+                        <path d="M95,140 Q200,100 305,160" opacity="0.3" style="animation: glow-line 4s ease-in-out infinite;"/>
+                        <path d="M80,200 Q140,140 200,110" opacity="0.25" style="animation: glow-line 5s ease-in-out infinite 0.5s;"/>
+                        <path d="M200,110 Q260,140 320,200" opacity="0.25" style="animation: glow-line 4.5s ease-in-out infinite 1s;"/>
+                        <path d="M305,160 Q340,220 300,280" opacity="0.3" style="animation: glow-line 5.5s ease-in-out infinite 0.3s;"/>
+                        <path d="M95,260 Q150,220 200,250" opacity="0.25" style="animation: glow-line 4s ease-in-out infinite 0.8s;"/>
+                        <path d="M200,250 Q250,280 300,280" opacity="0.25" style="animation: glow-line 5s ease-in-out infinite 1.2s;"/>
+                        <path d="M80,200 Q60,250 95,260" opacity="0.2" style="animation: glow-line 6s ease-in-out infinite 0.4s;"/>
+                        <path d="M95,140 Q60,170 80,200" opacity="0.2" style="animation: glow-line 5s ease-in-out infinite 0.7s;"/>
+                    </g>
+
+                    <!-- Network nodes -->
+                    <g class="globe-dots">
+                        <!-- Primary nodes -->
+                        <circle cx="95" cy="140" r="3" fill="#0ea5e9" opacity="0.8"/>
+                        <circle cx="305" cy="160" r="3" fill="#0ea5e9" opacity="0.8"/>
+                        <circle cx="200" cy="110" r="3.5" fill="#8b5cf6" opacity="0.9"/>
+                        <circle cx="80" cy="200" r="2.5" fill="#0ea5e9" opacity="0.7"/>
+                        <circle cx="320" cy="200" r="2.5" fill="#0ea5e9" opacity="0.7"/>
+                        <circle cx="95" cy="260" r="3" fill="#8b5cf6" opacity="0.8"/>
+                        <circle cx="300" cy="280" r="3" fill="#8b5cf6" opacity="0.8"/>
+                        <circle cx="200" cy="250" r="2.5" fill="#0ea5e9" opacity="0.7"/>
+
+                        <!-- Secondary nodes -->
+                        <circle cx="150" cy="130" r="1.5" fill="#0ea5e9" opacity="0.5"/>
+                        <circle cx="250" cy="135" r="1.5" fill="#8b5cf6" opacity="0.5"/>
+                        <circle cx="130" cy="200" r="1.5" fill="#0ea5e9" opacity="0.4"/>
+                        <circle cx="270" cy="200" r="1.5" fill="#0ea5e9" opacity="0.4"/>
+                        <circle cx="150" cy="250" r="1.5" fill="#8b5cf6" opacity="0.5"/>
+                        <circle cx="250" cy="260" r="1.5" fill="#0ea5e9" opacity="0.5"/>
+                        <circle cx="200" cy="180" r="2" fill="#8b5cf6" opacity="0.6"/>
+                        <circle cx="175" cy="160" r="1" fill="#0ea5e9" opacity="0.4"/>
+                        <circle cx="225" cy="165" r="1" fill="#0ea5e9" opacity="0.4"/>
+                        <circle cx="180" cy="220" r="1" fill="#8b5cf6" opacity="0.4"/>
+                        <circle cx="220" cy="215" r="1" fill="#8b5cf6" opacity="0.4"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+            <div class="text-center">
+                <div class="inline-flex items-center px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700/50 mb-8">
+                    <span class="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
+                    <span class="text-sm text-slate-300">Auto-updated twice weekly</span>
+                </div>
+                <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6">
+                    Free <span class="gradient-text">GeoIP</span> Databases
+                </h1>
+                <p class="text-xl sm:text-2xl text-slate-400 max-w-3xl mx-auto mb-12">
+                    Accurate, regularly updated IP geolocation databases for developers.
+                    Served via lightning-fast CDN with no authentication required.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="#quickstart" class="group inline-flex items-center px-8 py-4 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold text-lg hover:from-primary-400 hover:to-primary-500 transition-all shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40">
+                        Get Started
+                        <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                        </svg>
+                    </a>
+                    <a href="https://github.com/wp-statistics" target="_blank" class="inline-flex items-center px-8 py-4 rounded-xl bg-slate-800 text-white font-semibold text-lg hover:bg-slate-700 transition-all border border-slate-700">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        View on GitHub
+                    </a>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="mt-24 grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-white mb-2">500+</div>
+                    <div class="text-slate-400">GitHub Stars</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-white mb-2">50K+</div>
+                    <div class="text-slate-400">Weekly Downloads</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-white mb-2">2x</div>
+                    <div class="text-slate-400">Weekly Updates</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-white mb-2">100%</div>
+                    <div class="text-slate-400">Free Forever</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IP Lookup Section -->
+    <section id="lookup" class="py-24 bg-slate-900/50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-4">IP Address Lookup</h2>
+                <p class="text-xl text-slate-400 max-w-2xl mx-auto">
+                    Try our databases live — enter any IP address or look up your own.
+                </p>
+            </div>
+
+            <!-- Search -->
+            <div class="flex gap-3 mb-8 max-w-2xl mx-auto">
+                <div class="flex-1 relative">
+                    <input type="text" id="lookup-input" placeholder="Enter an IP address..." class="w-full px-5 py-4 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors text-lg" />
+                    <div id="lookup-spinner" class="hidden absolute right-4 top-1/2 -translate-y-1/2">
+                        <svg class="w-5 h-5 animate-spin text-primary-400" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                    </div>
+                </div>
+                <button onclick="performLookup()" class="px-8 py-4 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold text-lg hover:from-primary-400 hover:to-primary-500 transition-all shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40 whitespace-nowrap">
+                    Lookup
+                </button>
+            </div>
+
+            <!-- Results Card -->
+            <div id="lookup-results" class="hidden">
+                <div class="rounded-2xl bg-gradient-to-b from-slate-800 to-slate-900 border border-slate-700/50 overflow-hidden">
+                    <!-- Results Header -->
+                    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-700/50">
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                            <span class="font-semibold text-white" id="result-ip">—</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <!-- Database Toggle -->
+                            <div class="flex rounded-lg bg-slate-900 border border-slate-700 p-0.5">
+                                <button onclick="switchDB('maxmind')" id="db-tab-maxmind" class="db-tab px-3 py-1.5 rounded-md text-sm font-medium transition-colors bg-primary-500/20 text-primary-400">MaxMind</button>
+                                <button onclick="switchDB('dbip')" id="db-tab-dbip" class="db-tab px-3 py-1.5 rounded-md text-sm font-medium transition-colors text-slate-400 hover:text-white">DB-IP</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Grid -->
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4" id="result-grid">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- More Info (collapsible) -->
+                    <div id="more-info-section" class="hidden border-t border-slate-700/50">
+                        <button onclick="toggleMoreInfo()" id="more-info-toggle" class="w-full flex items-center justify-between px-6 py-3 text-sm text-slate-400 hover:text-white transition-colors">
+                            <span class="flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                More Info
+                            </span>
+                            <svg id="more-info-chevron" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div id="more-info-grid" class="hidden px-6 pb-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1" id="result-grid-extra"></div>
+                        </div>
+                    </div>
+
+                    <!-- Results Footer -->
+                    <div class="px-6 py-4 border-t border-slate-700/50 flex items-center justify-between">
+                        <button onclick="copyJSON()" id="copy-json-btn" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 text-sm text-slate-300 hover:text-white hover:border-slate-600 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            Copy JSON
+                        </button>
+                        <span class="text-xs text-slate-500" id="result-db-label">GeoLite2-City</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div id="lookup-error" class="hidden">
+                <div class="rounded-2xl bg-red-500/5 border border-red-500/20 p-6 text-center">
+                    <svg class="w-10 h-10 text-red-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <p class="text-red-400 font-medium" id="error-message">Something went wrong</p>
+                </div>
+            </div>
+
+            <!-- Loading Skeleton -->
+            <div id="lookup-skeleton" class="hidden">
+                <div class="rounded-2xl bg-gradient-to-b from-slate-800 to-slate-900 border border-slate-700/50 p-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+                        <div class="h-6 bg-slate-700/50 rounded animate-pulse"></div>
+                        <div class="h-6 bg-slate-700/50 rounded animate-pulse"></div>
+                        <div class="h-6 bg-slate-700/50 rounded animate-pulse"></div>
+                        <div class="h-6 bg-slate-700/50 rounded animate-pulse"></div>
+                        <div class="h-6 bg-slate-700/50 rounded animate-pulse"></div>
+                        <div class="h-6 bg-slate-700/50 rounded animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CLI Usage Hint -->
+            <div class="mt-8 rounded-xl bg-slate-800/50 border border-slate-700/50 p-5">
+                <div class="flex items-center gap-2 mb-3">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span class="text-sm font-medium text-slate-400">Also available via CLI</span>
+                </div>
+                <div class="space-y-1.5 font-mono text-sm">
+                    <p class="text-slate-300"><span class="text-primary-400">$</span> curl https://geo.wp-statistics.com</p>
+                    <p class="text-slate-300"><span class="text-primary-400">$</span> curl https://geo.wp-statistics.com/1.2.3.4</p>
+                    <p class="text-slate-300"><span class="text-primary-400">$</span> curl https://geo.wp-statistics.com?format=json</p>
+                    <p class="text-slate-300"><span class="text-primary-400">$</span> curl https://geo.wp-statistics.com?format=table</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Databases Section -->
+    <section id="databases" class="py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-4">Choose Your Database</h2>
+                <p class="text-xl text-slate-400 max-w-2xl mx-auto">
+                    Two industry-leading geolocation databases, automatically updated and served via CDN.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- MaxMind Card -->
+                <div class="group relative rounded-2xl bg-gradient-to-b from-slate-800 to-slate-900 border border-slate-700/50 p-8 hover:border-primary-500/50 transition-all duration-300">
+                    <div class="absolute inset-0 rounded-2xl bg-gradient-to-b from-primary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="relative">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center">
+                                    <svg class="w-7 h-7 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold">MaxMind GeoLite2-City</h3>
+                                    <p class="text-slate-400 text-sm">Industry Standard</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-green-500/10 text-green-400 text-xs font-medium">POPULAR</span>
+                        </div>
+                        <div class="flex items-center space-x-2 mb-6 text-sm">
+                            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-slate-400">Last updated:</span>
+                            <span class="text-orange-400 font-medium" id="maxmind-last-update">Loading...</span>
+                        </div>
+
+                        <div class="space-y-4 mb-8">
+                            <div class="flex items-center text-slate-300">
+                                <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                City-level accuracy
+                            </div>
+                            <div class="flex items-center text-slate-300">
+                                <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                Updated every Tuesday & Friday
+                            </div>
+                            <div class="flex items-center text-slate-300">
+                                <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                ~68 MB compressed
+                            </div>
+                            <div class="flex items-center text-slate-300">
+                                <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                CC BY-SA 4.0 License
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="p-3 rounded-lg bg-slate-950 border border-slate-700">
+                                <code class="text-sm text-primary-400 break-all">https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz</code>
+                            </div>
+                            <div class="flex gap-3">
+                                <a href="https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz" class="flex-1 inline-flex items-center justify-center px-4 py-3 rounded-lg bg-sky-500 text-white font-medium hover:bg-sky-400 transition-colors">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                    Download
+                                </a>
+                                <a href="https://github.com/wp-statistics/GeoLite2-City" target="_blank" class="inline-flex items-center justify-center px-4 py-3 rounded-lg bg-slate-800 text-white font-medium hover:bg-slate-700 transition-colors border border-slate-700">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DB-IP Card -->
+                <div class="group relative rounded-2xl bg-gradient-to-b from-slate-800 to-slate-900 border border-slate-700/50 p-8 hover:border-purple-500/50 transition-all duration-300">
+                    <div class="absolute inset-0 rounded-2xl bg-gradient-to-b from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="relative">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                                    <svg class="w-7 h-7 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold">DB-IP City Lite</h3>
+                                    <p class="text-slate-400 text-sm">Lightweight Alternative</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-medium">COMPACT</span>
+                        </div>
+                        <div class="flex items-center space-x-2 mb-6 text-sm">
+                            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-slate-400">Last updated:</span>
+                            <span class="text-purple-400 font-medium" id="dbip-last-update">Loading...</span>
+                        </div>
+
+                        <div class="space-y-4 mb-8">
+                            <div class="flex items-center text-slate-300">
+                                <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                City-level accuracy
+                            </div>
+                            <div class="flex items-center text-slate-300">
+                                <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                Updated monthly (1st of month)
+                            </div>
+                            <div class="flex items-center text-slate-300">
+                                <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                ~19 MB compressed
+                            </div>
+                            <div class="flex items-center text-slate-300">
+                                <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                CC BY 4.0 License
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="p-3 rounded-lg bg-slate-950 border border-slate-700">
+                                <code class="text-sm text-purple-400 break-all">https://cdn.jsdelivr.net/npm/dbip-city-lite/dbip-city-lite.mmdb.gz</code>
+                            </div>
+                            <div class="flex gap-3">
+                                <a href="https://cdn.jsdelivr.net/npm/dbip-city-lite/dbip-city-lite.mmdb.gz" class="flex-1 inline-flex items-center justify-center px-4 py-3 rounded-lg bg-purple-500 text-white font-medium hover:bg-purple-400 transition-colors">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                    Download
+                                </a>
+                                <a href="https://github.com/wp-statistics/DbIP-City-lite" target="_blank" class="inline-flex items-center justify-center px-4 py-3 rounded-lg bg-slate-800 text-white font-medium hover:bg-slate-700 transition-colors border border-slate-700">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Start Section -->
+    <section id="quickstart" class="py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-4">Quick Start</h2>
+                <p class="text-xl text-slate-400 max-w-2xl mx-auto">
+                    Get started in minutes with our simple integration examples.
+                </p>
+            </div>
+
+            <!-- Tabbed Code Viewer -->
+            <div class="max-w-4xl mx-auto">
+                <div class="flex flex-col md:flex-row rounded-2xl overflow-hidden border border-slate-700/50 bg-slate-900">
+                    <!-- Language Tabs - Left Side -->
+                    <div class="md:w-48 md:min-w-[12rem] flex md:flex-col border-b md:border-b-0 md:border-r border-slate-700/50 bg-slate-800/50">
+                        <button onclick="showCode('cli')" id="tab-cli" class="code-tab flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-700/50 transition-colors border-b md:border-b border-slate-700/30 relative">
+                            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <span class="font-medium">CLI</span>
+                            <span class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">NEW</span>
+                        </button>
+                        <button onclick="showCode('php')" id="tab-php" class="code-tab flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-700/50 transition-colors border-b md:border-b border-slate-700/30 active">
+                            <svg class="w-5 h-5 text-indigo-400" viewBox="0 0 24 24" fill="currentColor"><path d="M7.01 10.207h-.944l-.515 2.648h.838c.556 0 .97-.105 1.242-.314.272-.21.455-.559.55-1.049.092-.47.05-.82-.124-1.049-.174-.229-.509-.343-1.047-.343v.107zm4.02 0h-.944l-.515 2.648h.838c.556 0 .97-.105 1.242-.314.272-.21.455-.559.55-1.049.092-.47.05-.82-.124-1.049-.174-.229-.509-.343-1.047-.343v.107zM12 5.688C5.373 5.688 0 8.514 0 12s5.373 6.313 12 6.313S24 15.486 24 12c0-3.486-5.373-6.312-12-6.312zm-3.26 7.451c-.261.25-.575.438-.917.551-.336.108-.765.164-1.285.164H5.357l-.327 1.681H3.652l1.23-6.326h2.65c.797 0 1.378.209 1.744.628.366.418.476 1.002.33 1.752a2.836 2.836 0 01-.349.899c-.165.283-.384.532-.659.747l.142-.096zm4.02 0c-.261.25-.575.438-.917.551-.336.108-.765.164-1.285.164H9.377l-.327 1.681H7.672l1.23-6.326h2.65c.797 0 1.378.209 1.744.628.366.418.476 1.002.33 1.752a2.836 2.836 0 01-.349.899c-.165.283-.384.532-.659.747l.142-.096zm7.187-1.027c-.07.266-.153.505-.25.719a3.43 3.43 0 01-.382.635c-.146.195-.3.37-.465.528a2.9 2.9 0 01-.512.395c-.186.113-.38.21-.58.291a3.376 3.376 0 01-.612.178c-.199.041-.392.067-.576.078-.184.01-.352.016-.502.016h-1.232l-.327 1.681h-1.378l1.23-6.326h2.65c.797 0 1.378.209 1.744.628.366.418.476 1.002.33 1.752l-.138.425zm-2.165-.724h-.944l-.515 2.648h.838c.556 0 .97-.105 1.242-.314.272-.21.455-.559.55-1.049.092-.47.05-.82-.124-1.049-.174-.229-.509-.343-1.047-.343v.107z"/></svg>
+                            <span class="font-medium">PHP</span>
+                        </button>
+                        <button onclick="showCode('node')" id="tab-node" class="code-tab flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-700/50 transition-colors border-b md:border-b border-slate-700/30">
+                            <svg class="w-5 h-5 text-green-400" viewBox="0 0 24 24" fill="currentColor"><path d="M11.998 24c-.321 0-.641-.084-.922-.247l-2.936-1.737c-.438-.245-.224-.332-.08-.383.585-.203.703-.25 1.328-.604.065-.037.151-.023.218.017l2.256 1.339c.082.045.198.045.275 0l8.795-5.076c.082-.047.134-.141.134-.238V6.921c0-.099-.053-.194-.137-.242l-8.791-5.072c-.081-.047-.189-.047-.271 0L3.075 6.68c-.085.048-.139.143-.139.241v10.15c0 .097.054.189.139.235l2.409 1.392c1.307.654 2.108-.116 2.108-.89V7.787c0-.142.114-.253.256-.253h1.115c.139 0 .255.111.255.253v10.021c0 1.745-.95 2.745-2.604 2.745-.508 0-.909 0-2.026-.551L2.28 18.675c-.57-.329-.922-.943-.922-1.604V6.921c0-.659.353-1.275.922-1.603l8.795-5.082c.557-.315 1.296-.315 1.848 0l8.794 5.082c.57.329.924.944.924 1.603v10.15c0 .659-.354 1.273-.924 1.604l-8.794 5.078c-.28.163-.601.247-.925.247zm2.722-6.996c-3.857 0-4.664-1.771-4.664-3.257 0-.142.114-.253.256-.253h1.136c.127 0 .233.092.253.216.172 1.161.686 1.746 3.019 1.746 1.858 0 2.648-.42 2.648-1.404 0-.567-.224-.988-3.11-1.271-2.41-.238-3.901-.771-3.901-2.7 0-1.778 1.499-2.837 4.012-2.837 2.823 0 4.218.979 4.394 3.082.006.075-.021.148-.073.204-.051.053-.122.085-.196.085h-1.143c-.12 0-.226-.083-.251-.199-.278-1.234-.953-1.629-2.731-1.629-2.012 0-2.246.701-2.246 1.225 0 .636.276.821 3.015 1.181 2.712.356 3.994.861 3.994 2.78 0 1.919-1.599 3.018-4.388 3.018l-.02.013z"/></svg>
+                            <span class="font-medium">Node.js</span>
+                        </button>
+                        <button onclick="showCode('python')" id="tab-python" class="code-tab flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-700/50 transition-colors border-b md:border-b border-slate-700/30">
+                            <svg class="w-5 h-5 text-yellow-400" viewBox="0 0 24 24" fill="currentColor"><path d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05-.05-1.23.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.24-.01h.16l.06.01h8.16v-.83H6.18l-.01-2.75-.02-.37.05-.34.11-.31.17-.28.25-.26.31-.23.38-.2.44-.18.51-.15.58-.12.64-.1.71-.06.77-.04.84-.02 1.27.05zm-6.3 1.98l-.23.33-.08.41.08.41.23.34.33.22.41.09.41-.09.33-.22.23-.34.08-.41-.08-.41-.23-.33-.33-.22-.41-.09-.41.09zm13.09 3.95l.28.06.32.12.35.18.36.27.36.35.35.47.32.59.28.73.21.88.14 1.04.05 1.23-.06 1.23-.16 1.04-.24.86-.32.71-.36.57-.4.45-.42.33-.42.24-.4.16-.36.09-.32.05-.24.02-.16-.01h-8.22v.82h5.84l.01 2.76.02.36-.05.34-.11.31-.17.29-.25.25-.31.24-.38.2-.44.17-.51.15-.58.13-.64.09-.71.07-.77.04-.84.01-1.27-.04-1.07-.14-.9-.2-.73-.25-.59-.3-.45-.33-.34-.34-.25-.34-.16-.33-.1-.3-.04-.25-.02-.2.01-.13v-5.34l.05-.64.13-.54.21-.46.26-.38.3-.32.33-.24.35-.2.35-.14.33-.1.3-.06.26-.04.21-.02.13-.01h5.84l.69-.05.59-.14.5-.21.41-.28.33-.32.27-.35.2-.36.15-.36.1-.35.07-.32.04-.28.02-.21V6.07h2.09l.14.01zm-6.47 14.25l-.23.33-.08.41.08.41.23.33.33.23.41.08.41-.08.33-.23.23-.33.08-.41-.08-.41-.23-.33-.33-.23-.41-.08-.41.08z"/></svg>
+                            <span class="font-medium">Python</span>
+                        </button>
+                        <button onclick="showCode('wordpress')" id="tab-wordpress" class="code-tab flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-700/50 transition-colors relative">
+                            <svg class="w-5 h-5 text-primary-400" viewBox="0 0 122.52 122.523" fill="currentColor"><path d="m8.708 61.26c0 20.802 12.089 38.779 29.619 47.298l-25.069-68.686c-2.916 6.536-4.55 13.769-4.55 21.388zm88.039-2.652c0-6.495-2.333-10.993-4.334-14.494-2.664-4.329-5.161-7.995-5.161-12.324 0-4.831 3.664-9.328 8.825-9.328.233 0 .454.029.681.042-9.35-8.566-21.807-13.796-35.489-13.796-18.36 0-34.513 9.42-43.91 23.688 1.233.037 2.395.063 3.382.063 5.497 0 14.006-.667 14.006-.667 2.833-.167 3.167 3.994.337 4.329 0 0-2.847.335-6.015.501l19.138 56.925 11.501-34.493-8.188-22.432c-2.83-.166-5.511-.501-5.511-.501-2.832-.166-2.5-4.496.332-4.329 0 0 8.679.667 13.843.667 5.496 0 14.006-.667 14.006-.667 2.835-.167 3.168 3.994.337 4.329 0 0-2.853.335-6.015.501l18.992 56.494 5.242-17.517c2.272-7.269 4.001-12.49 4.001-16.989z"/><path d="m62.184 65.857-15.768 45.819c4.708 1.384 9.687 2.141 14.846 2.141 6.12 0 11.989-1.058 17.452-2.979-.141-.225-.269-.464-.374-.724z"/><path d="m107.376 36.046c.226 1.674.354 3.471.354 5.404 0 5.333-.996 11.328-3.996 18.824l-16.053 46.413c15.624-9.111 26.133-26.038 26.133-45.426.001-9.137-2.333-17.729-6.438-25.215z"/><path d="m61.262 0c-33.779 0-61.262 27.481-61.262 61.26 0 33.783 27.483 61.263 61.262 61.263 33.778 0 61.265-27.48 61.265-61.263-.001-33.779-27.487-61.26-61.265-61.26zm0 119.715c-32.23 0-58.453-26.223-58.453-58.455 0-32.23 26.222-58.451 58.453-58.451 32.229 0 58.45 26.221 58.45 58.451 0 32.232-26.221 58.455-58.45 58.455z"/></svg>
+                            <span class="font-medium">WordPress</span>
+                            <span class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-primary-500/20 text-primary-400 text-[10px] font-bold">EASY</span>
+                        </button>
+                    </div>
+
+                    <!-- Code Content - Right Side -->
+                    <div class="flex-1 relative min-h-[380px]">
+                        <!-- Window Controls -->
+                        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-700/50 bg-slate-800/30">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                            </div>
+                            <span id="code-filename" class="text-xs text-slate-500 font-mono">example.php</span>
+                            <button onclick="copyCode()" class="text-slate-500 hover:text-white transition-colors" title="Copy code">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- CLI Code -->
+                        <div id="code-cli" class="code-content p-6 hidden">
+                            <pre class="text-sm leading-relaxed"><code class="text-slate-300"><span class="text-slate-500"># Look up your own IP</span>
+<span class="text-primary-400">$</span> curl <span class="text-green-400">https://geo.wp-statistics.com</span>
+
+<span class="text-slate-500"># Look up a specific IP</span>
+<span class="text-primary-400">$</span> curl <span class="text-green-400">https://geo.wp-statistics.com/1.2.3.4</span>
+
+<span class="text-slate-500"># Get JSON response</span>
+<span class="text-primary-400">$</span> curl <span class="text-green-400">https://geo.wp-statistics.com?format=json</span>
+
+<span class="text-slate-500"># Get a formatted table</span>
+<span class="text-primary-400">$</span> curl <span class="text-green-400">https://geo.wp-statistics.com?format=table</span>
+
+<span class="text-slate-500"># Use a specific database</span>
+<span class="text-primary-400">$</span> curl <span class="text-green-400">https://geo.wp-statistics.com/api/lookup?ip=1.2.3.4</span></code></pre>
+                        </div>
+
+                        <!-- PHP Code -->
+                        <div id="code-php" class="code-content p-6">
+                            <pre class="text-sm leading-relaxed"><code class="text-slate-300"><span class="text-purple-400">use</span> GeoIp2\Database\Reader;
+
+<span class="text-slate-500">// Download the database from CDN</span>
+<span class="text-primary-400">$dbUrl</span> = <span class="text-green-400">'https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz'</span>;
+
+<span class="text-slate-500">// Initialize the reader</span>
+<span class="text-primary-400">$reader</span> = <span class="text-purple-400">new</span> Reader(<span class="text-green-400">'/path/to/GeoLite2-City.mmdb'</span>);
+
+<span class="text-slate-500">// Look up an IP address</span>
+<span class="text-primary-400">$record</span> = <span class="text-primary-400">$reader</span>-><span class="text-yellow-400">city</span>(<span class="text-green-400">'128.101.101.101'</span>);
+
+<span class="text-purple-400">echo</span> <span class="text-primary-400">$record</span>->country->name;  <span class="text-slate-500">// 'United States'</span>
+<span class="text-purple-400">echo</span> <span class="text-primary-400">$record</span>->city->name;     <span class="text-slate-500">// 'Minneapolis'</span>
+<span class="text-purple-400">echo</span> <span class="text-primary-400">$record</span>->location->latitude;</code></pre>
+                        </div>
+
+                        <!-- Node.js Code -->
+                        <div id="code-node" class="code-content p-6 hidden">
+                            <pre class="text-sm leading-relaxed"><code class="text-slate-300"><span class="text-purple-400">const</span> { Reader } = <span class="text-yellow-400">require</span>(<span class="text-green-400">'@maxmind/geoip2-node'</span>);
+
+<span class="text-slate-500">// Download the database from CDN</span>
+<span class="text-purple-400">const</span> dbUrl = <span class="text-green-400">'https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz'</span>;
+
+<span class="text-slate-500">// Initialize the reader</span>
+<span class="text-purple-400">const</span> reader = <span class="text-purple-400">await</span> Reader.<span class="text-yellow-400">open</span>(<span class="text-green-400">'./GeoLite2-City.mmdb'</span>);
+
+<span class="text-slate-500">// Look up an IP address</span>
+<span class="text-purple-400">const</span> response = reader.<span class="text-yellow-400">city</span>(<span class="text-green-400">'128.101.101.101'</span>);
+
+console.<span class="text-yellow-400">log</span>(response.country.names.en);  <span class="text-slate-500">// 'United States'</span>
+console.<span class="text-yellow-400">log</span>(response.city.names.en);     <span class="text-slate-500">// 'Minneapolis'</span>
+console.<span class="text-yellow-400">log</span>(response.location.latitude);</code></pre>
+                        </div>
+
+                        <!-- Python Code -->
+                        <div id="code-python" class="code-content p-6 hidden">
+                            <pre class="text-sm leading-relaxed"><code class="text-slate-300"><span class="text-purple-400">import</span> geoip2.database
+
+<span class="text-slate-500"># Download the database from CDN</span>
+db_url = <span class="text-green-400">'https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz'</span>
+
+<span class="text-slate-500"># Initialize the reader</span>
+reader = geoip2.database.<span class="text-yellow-400">Reader</span>(<span class="text-green-400">'./GeoLite2-City.mmdb'</span>)
+
+<span class="text-slate-500"># Look up an IP address</span>
+response = reader.<span class="text-yellow-400">city</span>(<span class="text-green-400">'128.101.101.101'</span>)
+
+<span class="text-purple-400">print</span>(response.country.name)      <span class="text-slate-500"># 'United States'</span>
+<span class="text-purple-400">print</span>(response.city.name)         <span class="text-slate-500"># 'Minneapolis'</span>
+<span class="text-purple-400">print</span>(response.location.latitude)</code></pre>
+                        </div>
+
+                        <!-- WordPress Code -->
+                        <div id="code-wordpress" class="code-content p-6 hidden">
+                            <pre class="text-sm leading-relaxed"><code class="text-slate-300"><span class="text-purple-400">use</span> WP_Statistics\Service\Geolocation\GeolocationFactory;
+
+<span class="text-slate-500">// That's it! WP Statistics handles everything:</span>
+<span class="text-slate-500">// - Automatic database download</span>
+<span class="text-slate-500">// - Automatic updates (twice per week)</span>
+<span class="text-slate-500">// - Simple one-line API</span>
+
+<span class="text-primary-400">$location</span> = GeolocationFactory::<span class="text-yellow-400">getLocation</span>(<span class="text-green-400">'128.101.101.101'</span>);
+
+<span class="text-purple-400">echo</span> <span class="text-primary-400">$location</span>[<span class="text-green-400">'country'</span>];     <span class="text-slate-500">// 'United States'</span>
+<span class="text-purple-400">echo</span> <span class="text-primary-400">$location</span>[<span class="text-green-400">'country_code'</span>]; <span class="text-slate-500">// 'US'</span>
+<span class="text-purple-400">echo</span> <span class="text-primary-400">$location</span>[<span class="text-green-400">'city'</span>];        <span class="text-slate-500">// 'Minneapolis'</span></code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WP Statistics Promo - Only visible when WordPress tab is active -->
+                <div id="wp-promo" class="mt-6 p-5 rounded-xl bg-gradient-to-r from-primary-500/10 to-purple-500/10 border border-primary-500/20 hidden">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-10 h-10 rounded-lg bg-primary-500 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-medium text-white">The easiest way to use GeoIP in WordPress</p>
+                                <p class="text-sm text-slate-400">Zero configuration. Auto-updates. Privacy-focused analytics.</p>
+                            </div>
+                        </div>
+                        <a href="https://wordpress.org/plugins/wp-statistics/" target="_blank" class="inline-flex items-center px-5 py-2.5 rounded-lg bg-primary-500 text-white font-medium hover:bg-primary-400 transition-colors whitespace-nowrap text-sm">
+                            Get WP Statistics
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                const codeFiles = {
+                    cli: 'terminal',
+                    php: 'example.php',
+                    node: 'example.js',
+                    python: 'example.py',
+                    wordpress: 'functions.php'
+                };
+
+                function showCode(lang) {
+                    // Hide all code blocks
+                    document.querySelectorAll('.code-content').forEach(el => el.classList.add('hidden'));
+                    // Show selected code block
+                    document.getElementById('code-' + lang).classList.remove('hidden');
+
+                    // Update active tab
+                    document.querySelectorAll('.code-tab').forEach(el => el.classList.remove('active', 'bg-slate-700/50'));
+                    document.getElementById('tab-' + lang).classList.add('active', 'bg-slate-700/50');
+
+                    // Update filename
+                    document.getElementById('code-filename').textContent = codeFiles[lang];
+
+                    // Show/hide WP promo
+                    const wpPromo = document.getElementById('wp-promo');
+                    if (lang === 'wordpress') {
+                        wpPromo.classList.remove('hidden');
+                    } else {
+                        wpPromo.classList.add('hidden');
+                    }
+                }
+
+                function copyCode() {
+                    const activeCode = document.querySelector('.code-content:not(.hidden) code');
+                    navigator.clipboard.writeText(activeCode.textContent);
+
+                    // Visual feedback
+                    const btn = event.currentTarget;
+                    btn.innerHTML = '<svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+                    setTimeout(() => {
+                        btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>';
+                    }, 2000);
+                }
+
+                // Initialize with PHP tab active
+                showCode('php');
+            </script>
+
+            <!-- CDN URLs -->
+            <div class="mt-12 p-6 rounded-2xl bg-slate-800/50 border border-slate-700/50">
+                <h3 class="text-lg font-semibold mb-4">Direct CDN URLs</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-sm text-slate-400 mb-2 block">MaxMind GeoLite2-City</label>
+                        <div class="flex items-center space-x-2">
+                            <code class="flex-1 p-3 rounded-lg bg-slate-900 text-primary-400 text-sm overflow-x-auto">https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz</code>
+                            <button onclick="navigator.clipboard.writeText('https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz')" class="p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm text-slate-400 mb-2 block">DB-IP City Lite</label>
+                        <div class="flex items-center space-x-2">
+                            <code class="flex-1 p-3 rounded-lg bg-slate-900 text-purple-400 text-sm overflow-x-auto">https://cdn.jsdelivr.net/npm/dbip-city-lite/dbip-city-lite.mmdb.gz</code>
+                            <button onclick="navigator.clipboard.writeText('https://cdn.jsdelivr.net/npm/dbip-city-lite/dbip-city-lite.mmdb.gz')" class="p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="docs" class="py-24 bg-slate-900/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-4">Why Choose Our Service?</h2>
+                <p class="text-xl text-slate-400 max-w-2xl mx-auto">
+                    We handle the complexity so you can focus on building.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="p-6 rounded-2xl bg-slate-800/50 border border-slate-700/50">
+                    <div class="w-12 h-12 rounded-xl bg-primary-500/10 flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Lightning Fast CDN</h3>
+                    <p class="text-slate-400">Served via jsDelivr with global edge locations. Average response time under 50ms worldwide.</p>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-slate-800/50 border border-slate-700/50">
+                    <div class="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Auto-Updated</h3>
+                    <p class="text-slate-400">GitHub Actions automatically fetch and publish the latest databases. No manual intervention needed.</p>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-slate-800/50 border border-slate-700/50">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">No Auth Required</h3>
+                    <p class="text-slate-400">No API keys, no accounts, no rate limits. Just download and use immediately.</p>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-slate-800/50 border border-slate-700/50">
+                    <div class="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Version History</h3>
+                    <p class="text-slate-400">All versions preserved in npm registry. Roll back to any previous database version if needed.</p>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-slate-800/50 border border-slate-700/50">
+                    <div class="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Open Source</h3>
+                    <p class="text-slate-400">Full transparency. Check our GitHub repos for automation scripts and update history.</p>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-slate-800/50 border border-slate-700/50">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Community Driven</h3>
+                    <p class="text-slate-400">Maintained by WP Statistics team. Trusted by thousands of WordPress sites worldwide.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="p-12 rounded-3xl bg-gradient-to-br from-primary-500/10 to-purple-500/10 border border-slate-700/50">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-4">Ready to Get Started?</h2>
+                <p class="text-xl text-slate-400 mb-8">
+                    Start using accurate geolocation data in your application today.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="#quickstart" class="inline-flex items-center px-8 py-4 rounded-xl bg-white text-slate-900 font-semibold text-lg hover:bg-slate-100 transition-colors">
+                        View Documentation
+                    </a>
+                    <a href="https://wp-statistics.com" target="_blank" class="inline-flex items-center px-8 py-4 rounded-xl bg-slate-800 text-white font-semibold text-lg hover:bg-slate-700 transition-colors border border-slate-700">
+                        Learn About WP Statistics
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-purple-500 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-lg font-bold">geo.wp-statistics.com</span>
+                    </div>
+                    <p class="text-slate-400 mb-4">
+                        Free GeoIP databases for developers, maintained by the WP Statistics team.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="https://github.com/wp-statistics" target="_blank" class="text-slate-400 hover:text-white transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        </a>
+                        <a href="https://x.com/wp_statistics" target="_blank" class="text-slate-400 hover:text-white transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2 text-slate-400">
+                        <li><a href="#databases" class="hover:text-white transition-colors">Databases</a></li>
+                        <li><a href="#quickstart" class="hover:text-white transition-colors">Quick Start</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Data Sources</h4>
+                    <ul class="space-y-2 text-slate-400">
+                        <li><a href="https://www.maxmind.com" target="_blank" class="hover:text-white transition-colors">MaxMind</a></li>
+                        <li><a href="https://db-ip.com" target="_blank" class="hover:text-white transition-colors">DB-IP</a></li>
+                        <li><a href="https://wp-statistics.com" target="_blank" class="hover:text-white transition-colors">WP Statistics</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between text-slate-400 text-sm">
+                <p>Database by <a href="https://www.maxmind.com" target="_blank" class="text-primary-400 hover:underline">MaxMind</a> and <a href="https://db-ip.com" target="_blank" class="text-purple-400 hover:underline">DB-IP</a>. Distributed under CC BY-SA 4.0 and CC BY 4.0.</p>
+                <p class="mt-4 md:mt-0">Maintained with ❤️ by <a href="https://wp-statistics.com" target="_blank" class="text-white hover:underline">WP Statistics</a></p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Fetch last update dates from npm registry
+        async function fetchLastUpdates() {
+            try {
+                // Fetch MaxMind package info
+                const maxmindRes = await fetch('https://registry.npmjs.org/geolite2-city');
+                const maxmindData = await maxmindRes.json();
+                const maxmindDate = new Date(maxmindData.time[maxmindData['dist-tags'].latest]);
+                document.getElementById('maxmind-last-update').textContent = maxmindDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            } catch (e) {
+                document.getElementById('maxmind-last-update').textContent = 'Dec 21, 2025';
+            }
+
+            try {
+                // Fetch DB-IP package info
+                const dbipRes = await fetch('https://registry.npmjs.org/dbip-city-lite');
+                const dbipData = await dbipRes.json();
+                const dbipDate = new Date(dbipData.time[dbipData['dist-tags'].latest]);
+                document.getElementById('dbip-last-update').textContent = dbipDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            } catch (e) {
+                document.getElementById('dbip-last-update').textContent = 'Dec 21, 2025';
+            }
+        }
+
+        fetchLastUpdates();
+    </script>
+
+    <!-- IP Lookup Logic -->
+    <script>
+        let currentDB = 'maxmind';
+        let lastLookupData = null;
+
+        async function performLookup(db) {
+            const input = document.getElementById('lookup-input');
+            const ip = input.value.trim();
+            const dbParam = db || currentDB;
+            const url = ip
+                ? `/api/lookup?ip=${encodeURIComponent(ip)}&db=${dbParam}`
+                : `/api/lookup?db=${dbParam}`;
+
+            document.getElementById('lookup-results').classList.add('hidden');
+            document.getElementById('lookup-error').classList.add('hidden');
+            document.getElementById('lookup-skeleton').classList.remove('hidden');
+            document.getElementById('lookup-spinner').classList.remove('hidden');
+
+            try {
+                const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+                document.getElementById('lookup-skeleton').classList.add('hidden');
+                document.getElementById('lookup-spinner').classList.add('hidden');
+
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    document.getElementById('error-message').textContent = err.message || `Lookup failed (${res.status})`;
+                    document.getElementById('lookup-error').classList.remove('hidden');
+                    return;
+                }
+
+                const data = await res.json();
+                lastLookupData = data;
+                renderResults(data);
+            } catch (e) {
+                document.getElementById('lookup-skeleton').classList.add('hidden');
+                document.getElementById('lookup-spinner').classList.add('hidden');
+                document.getElementById('error-message').textContent = 'Network error — could not reach the API.';
+                document.getElementById('lookup-error').classList.remove('hidden');
+            }
+        }
+
+        function renderResults(data) {
+            const mainFields = [
+                { label: 'City', value: data.city },
+                { label: 'Region', value: data.region ? `${data.region}${data.region_code ? ` (${data.region_code})` : ''}` : null },
+                { label: 'Country', value: data.country ? `${countryFlag(data.country_code)} ${data.country}${data.country_code ? ` (${data.country_code})` : ''}` : null },
+                { label: 'Continent', value: data.continent ? `${data.continent}${data.continent_code ? ` (${data.continent_code})` : ''}` : null },
+                { label: 'Coordinates', value: (data.latitude != null && data.longitude != null) ? `${data.latitude}, ${data.longitude}` : null },
+                { label: 'Timezone', value: data.timezone },
+                { label: 'Postal Code', value: data.postal_code },
+            ].filter(f => f.value);
+
+            const extraFields = [
+                { label: 'Accuracy Radius', value: data.accuracy_radius != null ? `~${data.accuracy_radius} km` : null },
+                { label: 'Metro Code', value: data.metro_code != null ? String(data.metro_code) : null },
+                { label: 'EU Member', value: data.is_in_european_union != null ? (data.is_in_european_union ? 'Yes' : 'No') : null },
+                { label: 'Registered Country', value: (data.registered_country && data.registered_country !== data.country) ? `${data.registered_country}${data.registered_country_code ? ` (${data.registered_country_code})` : ''}` : null },
+                { label: 'City Geoname ID', value: data.city_geoname_id != null ? String(data.city_geoname_id) : null },
+                { label: 'Country Geoname ID', value: data.country_geoname_id != null ? String(data.country_geoname_id) : null },
+            ].filter(f => f.value);
+
+            document.getElementById('result-ip').textContent = data.ip;
+            document.getElementById('result-db-label').textContent = data.database;
+
+            fillGrid('result-grid', mainFields);
+            fillGrid('result-grid-extra', extraFields);
+
+            // Show/hide more info section
+            const moreSection = document.getElementById('more-info-section');
+            if (extraFields.length > 0) {
+                moreSection.classList.remove('hidden');
+                // Reset to collapsed
+                document.getElementById('more-info-grid').classList.add('hidden');
+                document.getElementById('more-info-chevron').style.transform = '';
+            } else {
+                moreSection.classList.add('hidden');
+            }
+
+            document.getElementById('lookup-results').classList.remove('hidden');
+            document.getElementById('lookup-error').classList.add('hidden');
+        }
+
+        function fillGrid(gridId, fields) {
+            const grid = document.getElementById(gridId);
+            grid.innerHTML = '';
+            for (const f of fields) {
+                const row = document.createElement('div');
+                row.className = 'flex items-center justify-between py-2 border-b border-slate-700/30';
+                const labelEl = document.createElement('span');
+                labelEl.className = 'text-sm text-slate-400';
+                labelEl.textContent = f.label;
+                const valueEl = document.createElement('span');
+                valueEl.className = 'text-sm font-medium text-white';
+                valueEl.textContent = f.value;
+                row.append(labelEl, valueEl);
+                grid.appendChild(row);
+            }
+        }
+
+        function toggleMoreInfo() {
+            const grid = document.getElementById('more-info-grid');
+            const chevron = document.getElementById('more-info-chevron');
+            grid.classList.toggle('hidden');
+            chevron.style.transform = grid.classList.contains('hidden') ? '' : 'rotate(180deg)';
+        }
+
+        function countryFlag(code) {
+            if (!code) return '';
+            const offset = 127397;
+            return String.fromCodePoint(...[...code.toUpperCase()].map(c => c.charCodeAt(0) + offset));
+        }
+
+        function switchDB(db) {
+            currentDB = db;
+            document.querySelectorAll('.db-tab').forEach(el => {
+                el.classList.remove('bg-primary-500/20', 'text-primary-400');
+                el.classList.add('text-slate-400');
+            });
+            const active = document.getElementById('db-tab-' + db);
+            active.classList.add('bg-primary-500/20', 'text-primary-400');
+            active.classList.remove('text-slate-400');
+            if (lastLookupData) {
+                performLookup(db);
+            }
+        }
+
+        function copyJSON() {
+            if (!lastLookupData) return;
+            navigator.clipboard.writeText(JSON.stringify(lastLookupData, null, 2));
+            const btn = document.getElementById('copy-json-btn');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Copied!';
+            setTimeout(() => { btn.innerHTML = orig; }, 2000);
+        }
+
+        // Allow Enter key to trigger lookup
+        document.getElementById('lookup-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') performLookup();
+        });
+    </script>
+</body>
+</html>

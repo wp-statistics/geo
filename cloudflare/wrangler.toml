@@ -1,0 +1,20 @@
+name = "geo-wp-statistics"
+main = "src/index.js"
+compatibility_date = "2025-05-01"
+
+# Landing page (and any other static files) served from ./public.
+# run_worker_first = true so the Worker always runs first and decides whether "/"
+# is a browser (serve the page) or a CLI client like curl (look up their IP).
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = true
+
+# The GeoIP databases live here as uncompressed .mmdb objects. The Worker reads
+# them in small byte-ranges — it never loads a whole file into memory.
+[[r2_buckets]]
+binding = "GEO_DB"
+bucket_name = "geo-databases"
+
+# Custom domain is attached after the first deploy (see README).
+# routes = [ { pattern = "geo.wp-statistics.com", custom_domain = true } ]

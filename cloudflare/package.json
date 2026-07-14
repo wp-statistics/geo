@@ -1,0 +1,13 @@
+{
+  "name": "geo-wp-statistics-worker",
+  "private": true,
+  "description": "Cloudflare Worker for geo.wp-statistics.com IP lookup API",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "upload-db": "bash scripts/upload-db.sh"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  }
+}

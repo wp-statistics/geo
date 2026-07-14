@@ -1,0 +1,30 @@
+# Keeps the R2 copies of the GeoIP databases fresh.
+# Runs twice a week (MaxMind updates Tue & Fri) and on demand.
+#
+# Move this file to the repository root at .github/workflows/upload-r2.yml for
+# GitHub to pick it up. Add two repository secrets first:
+#   CLOUDFLARE_API_TOKEN   - token with "R2 Storage: Edit" permission
+#   CLOUDFLARE_ACCOUNT_ID  - your Cloudflare account id
+name: Upload GeoIP databases to R2
+
+on:
+  schedule:
+    - cron: "30 6 * * 2,5"   # Tue & Fri 06:30 UTC
+  workflow_dispatch: {}
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cloudflare
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: bash scripts/upload-db.sh
