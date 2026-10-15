@@ -1,4 +1,4 @@
-# Free GeoIP Databases - IP Geolocation for Developers
+# Free IP Geolocation Databases - IP Geolocation for Developers
 
 [![GitHub Stars](https://img.shields.io/github/stars/wp-statistics/geo?style=social)](https://github.com/wp-statistics/geo)
 [![Website](https://img.shields.io/badge/website-geo.wp--statistics.com-blue)](https://geo.wp-statistics.com)
@@ -192,7 +192,7 @@ print(response.location.latitude) # 44.9759
 
 ### WordPress (with WP Statistics)
 
-The easiest way to use GeoIP in WordPress - zero configuration required!
+The easiest way to use IP geolocation in WordPress - zero configuration required!
 
 ```php
 use WP_Statistics\Service\Geolocation\GeolocationFactory;
